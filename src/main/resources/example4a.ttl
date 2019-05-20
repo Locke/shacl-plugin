@@ -1,0 +1,18 @@
+@base <http://www.example.org/names> .
+
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:    <http://www.example.org/#> .
+@prefix names: <http://www.example.org/names#> .
+
+names:NameShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf ex:hasName ; # Applies to all Things that have a Name
+    sh:property [                    # Every Thing with a Name must have a Name that is a String of at least four characters
+        sh:path ex:hasName ;
+        sh:datatype xsd:string ;
+        sh:minLength 4 ;
+    ] ;
+.

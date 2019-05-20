@@ -1,0 +1,21 @@
+@base <http://www.example.org/persons> .
+
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex:      <http://www.example.org/#> .
+@prefix names:   <http://www.example.org/names#> .
+@prefix persons: <http://www.example.org/persons#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+
+<http://www.example.org/persons> owl:imports <http://www.example.org/names> .
+
+persons:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass ex:Person ; # Applies to all persons
+    sh:property [              # Every Person must have a Name
+        sh:path ex:hasName ;
+        sh:minCount 1 ;
+    ] ;
+.
