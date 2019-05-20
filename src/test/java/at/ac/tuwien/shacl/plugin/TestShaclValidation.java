@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import at.ac.tuwien.shacl.plugin.util.ShaclValidationReport;
 import at.ac.tuwien.shacl.plugin.util.ShaclValidationResult;
-import at.ac.tuwien.shacl.plugin.util.TestUtil;
+import at.ac.tuwien.shacl.plugin.util.TestUtil3;
 
 import static org.junit.Assert.*;
 
@@ -49,8 +49,8 @@ public class TestShaclValidation {
     public void testExample3() throws IOException {
 
         // Load the main data model
-        Model dataModel   = TestUtil.getDataModel();
-        Model shapesModel = TestUtil.getShapesModel();
+        Model dataModel   = TestUtil3.getDataModel();
+        Model shapesModel = TestUtil3.getShapesModel();
 
         // Run the validator and print results
         Resource results =

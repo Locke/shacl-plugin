@@ -13,7 +13,7 @@ import at.ac.tuwien.shacl.plugin.events.ShaclValidation;
 /**
  * Provides convenience methods for test execution.
  */
-public class TestUtil {
+public class TestUtil3 {
 
     private static final URL example3Url     = ShaclValidation.class.getClassLoader().getResource("example3.ttl");
     private static final URL example3DataUrl = ShaclValidation.class.getClassLoader().getResource("example3-data.ttl");

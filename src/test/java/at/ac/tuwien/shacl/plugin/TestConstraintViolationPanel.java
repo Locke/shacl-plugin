@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 import at.ac.tuwien.shacl.plugin.events.ShaclValidationRegistry;
 import at.ac.tuwien.shacl.plugin.ui.ShaclConstraintViolationPanel;
-import at.ac.tuwien.shacl.plugin.util.TestUtil;
+import at.ac.tuwien.shacl.plugin.util.TestUtil3;
 
 /**
  * Tests the constraint violation panel.
@@ -29,8 +29,8 @@ public class TestConstraintViolationPanel {
         ShaclConstraintViolationPanel panel = new ShaclConstraintViolationPanel();
         assertEquals(0, panel.getTableModel().getRowCount());
 
-        Model dataModel   = TestUtil.getDataModel();
-        Model shapesModel = TestUtil.getShapesModel();
+        Model dataModel   = TestUtil3.getDataModel();
+        Model shapesModel = TestUtil3.getShapesModel();
 
         ShaclValidationRegistry.getValidator().runValidation2(shapesModel, dataModel);
 
@@ -63,8 +63,8 @@ public class TestConstraintViolationPanel {
     public void testBehaviorAfterInit() throws IOException {
         ShaclConstraintViolationPanel panel = new ShaclConstraintViolationPanel();
 
-        Model dataModel   = TestUtil.getDataModel();
-        Model shapesModel = TestUtil.getShapesModel();
+        Model dataModel   = TestUtil3.getDataModel();
+        Model shapesModel = TestUtil3.getShapesModel();
 
         ShaclValidationRegistry.getValidator().runValidation2(shapesModel, dataModel);
 
@@ -75,8 +75,8 @@ public class TestConstraintViolationPanel {
     public void testDispose() throws IOException {
         ShaclConstraintViolationPanel panel = new ShaclConstraintViolationPanel();
 
-        Model dataModel   = TestUtil.getDataModel();
-        Model shapesModel = TestUtil.getShapesModel();
+        Model dataModel   = TestUtil3.getDataModel();
+        Model shapesModel = TestUtil3.getShapesModel();
 
         ShaclValidationRegistry.getValidator().runValidation2(shapesModel, dataModel);
 
@@ -85,8 +85,8 @@ public class TestConstraintViolationPanel {
         panel.getTableModel().setRowCount(0);
         panel.dispose();
 
-        Model dataModel2   = TestUtil.getDataModel();
-        Model shapesModel2 = TestUtil.getShapesModel();
+        Model dataModel2   = TestUtil3.getDataModel();
+        Model shapesModel2 = TestUtil3.getShapesModel();
 
         ShaclValidationRegistry.getValidator().runValidation2(shapesModel2, dataModel2);
 
