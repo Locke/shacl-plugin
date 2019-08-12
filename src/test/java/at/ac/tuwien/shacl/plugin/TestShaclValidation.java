@@ -68,7 +68,7 @@ public class TestShaclValidation {
             violationMessages.add(res.resultMessage.toString());
         }
 
-        Set<String> expectedMessages = new HashSet<>(Arrays.asList("More than 1^^http://www.w3.org/2001/XMLSchema#integer values", "Predicate http://www.example.org/#birthDate is not allowed (closed shape)", "Value does not match pattern \\\"^\\d{3}-\\d{2}-\\d{4}$\\\""));
+        Set<String> expectedMessages = new HashSet<>(Arrays.asList("More than 1 values", "Predicate ex:birthDate is not allowed (closed shape)", "Value does not match pattern \\\"^\\d{3}-\\d{2}-\\d{4}$\\\""));
 
         assertEquals("Expected violation report Messages", expectedMessages, violationMessages);
     }
