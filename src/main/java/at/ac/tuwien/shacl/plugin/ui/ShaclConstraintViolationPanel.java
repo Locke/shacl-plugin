@@ -20,12 +20,12 @@ import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.topbraid.shacl.validation.ValidationResult;
 
 import at.ac.tuwien.shacl.plugin.events.ErrorNotifier;
 import at.ac.tuwien.shacl.plugin.events.ShaclValidationRegistry;
 import at.ac.tuwien.shacl.plugin.syntax.JenaOwlConverter;
 import at.ac.tuwien.shacl.plugin.util.ShaclValidationReport;
-import at.ac.tuwien.shacl.plugin.util.ShaclValidationResult;
 import at.ac.tuwien.shacl.plugin.util.ShaclValidationResultComparator;
 
 /**
@@ -106,12 +106,12 @@ public class ShaclConstraintViolationPanel extends JPanel {
             return;
         }
 
-        List<ShaclValidationResult> validationResults = filterResults(lastReport, lastSelection);
+        List<ValidationResult> validationResults = filterResults(lastReport, lastSelection);
 
         validationResults.sort(ShaclValidationResultComparator.INSTANCE);
 
         // update table with result data
-        for (ShaclValidationResult res : validationResults) {
+        for (ValidationResult res : validationResults) {
             Vector<String> row = toRow(res);
 
             ((DefaultTableModel) table.getModel()).addRow(row);
@@ -145,20 +145,20 @@ public class ShaclConstraintViolationPanel extends JPanel {
         view.setHeaderText(text);
     }
 
-    private List<ShaclValidationResult> filterResults(ShaclValidationReport report, OWLEntity selection) {
+    private List<ValidationResult> filterResults(ShaclValidationReport report, OWLEntity selection) {
         if (selection == null) {
             return new ArrayList<>(report.validationResults);
         }
         else {
-            Stream<ShaclValidationResult> results = report.validationResults.stream();
+            Stream<ValidationResult> results = report.validationResults.stream();
 
             if (selection.isOWLNamedIndividual()) {
                 OWLNamedIndividual selectedIndividual = selection.asOWLNamedIndividual();
                 String selectedIndividualIRI = selectedIndividual.getIRI().toString();
 
                 results = results
-                        .filter(row -> row.focusNode != null && row.focusNode.isURIResource())
-                        .filter(row -> row.focusNode.asResource().getURI().equals(selectedIndividualIRI));
+                        .filter(row -> row.getFocusNode() != null && row.getFocusNode().isURIResource())
+                        .filter(row -> row.getFocusNode().asResource().getURI().equals(selectedIndividualIRI));
             }
             else if (selection.isOWLClass()) {
                 OWLClass selectedClass = selection.asOWLClass();
@@ -168,8 +168,8 @@ public class ShaclConstraintViolationPanel extends JPanel {
                     Set<String> instanceIRIs = getInstanceIRIs(selectedClass);
 
                     results = results
-                            .filter(row -> row.focusNode != null && row.focusNode.isURIResource())
-                            .filter(row -> instanceIRIs.contains(row.focusNode.asResource().getURI()));
+                            .filter(row -> row.getFocusNode() != null && row.getFocusNode().isURIResource())
+                            .filter(row -> instanceIRIs.contains(row.getFocusNode().asResource().getURI()));
                 }
             }
             else {
@@ -207,15 +207,15 @@ public class ShaclConstraintViolationPanel extends JPanel {
         }
     }
 
-    private static Vector<String> toRow(ShaclValidationResult res) {
+    private static Vector<String> toRow(ValidationResult res) {
         Vector<String> row = new Vector<>();
 
-        row.add(JenaOwlConverter.getQName(res.model, res.resultSeverity));
-        row.add(JenaOwlConverter.getQName(res.model, res.sourceShape));
-        row.add(res.resultMessage == null ? null : res.resultMessage.toString());
-        row.add(JenaOwlConverter.getQName(res.model, res.focusNode));
-        row.add(JenaOwlConverter.getQName(res.model, res.resultPath));
-        row.add(JenaOwlConverter.getQName(res.model, res.value));
+        row.add(JenaOwlConverter.getQName(res.getSeverity()));
+        row.add(JenaOwlConverter.getQName(res.getSourceShape()));
+        row.add(res.getMessage());
+        row.add(JenaOwlConverter.getQName(res.getFocusNode()));
+        row.add(JenaOwlConverter.getQName(res.getPath()));
+        row.add(JenaOwlConverter.getQName(res.getValue()));
 
         return row;
     }

@@ -1,39 +1,41 @@
 package at.ac.tuwien.shacl.plugin.util;
 
 import org.apache.jena.rdf.model.RDFNode;
+import org.topbraid.shacl.validation.ValidationResult;
 import org.topbraid.shacl.vocabulary.SH;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import at.ac.tuwien.shacl.plugin.syntax.JenaOwlConverter;
 
-public class ShaclValidationResultComparator implements Comparator<ShaclValidationResult> {
+public class ShaclValidationResultComparator implements Comparator<ValidationResult> {
 
     public final static ShaclValidationResultComparator INSTANCE = new ShaclValidationResultComparator();
 
     @Override
-    public int compare(ShaclValidationResult r1, ShaclValidationResult r2) {
-        int compareSeverity = compareSeverity(r1.resultSeverity, r2.resultSeverity);
+    public int compare(ValidationResult r1, ValidationResult r2) {
+        int compareSeverity = compareSeverity(r1.getSeverity(), r2.getSeverity());
         if (compareSeverity != 0)
             return compareSeverity;
 
-        int compareFocusNode = JenaOwlConverter.compareRDFNode(r1.focusNode, r2.focusNode);
+        int compareFocusNode = JenaOwlConverter.compareRDFNode(r1.getFocusNode(), r2.getFocusNode());
         if (compareFocusNode != 0)
             return compareFocusNode;
 
-        int compareResultPath = JenaOwlConverter.compareRDFNode(r1.resultPath, r2.resultPath);
+        int compareResultPath = JenaOwlConverter.compareRDFNode(r1.getPath(), r2.getPath());
         if (compareResultPath != 0)
             return compareResultPath;
 
-        int compareShape = JenaOwlConverter.compareRDFNode(r1.sourceShape, r2.sourceShape);
+        int compareShape = JenaOwlConverter.compareRDFNode(r1.getSourceShape(), r2.getSourceShape());
         if (compareShape != 0)
             return compareShape;
 
-        int compareResultMessage = JenaOwlConverter.compareRDFNode(r1.resultMessage, r2.resultMessage);
+        int compareResultMessage = compareString(r1.getMessage(), r2.getMessage());
         if (compareResultMessage != 0)
             return compareResultMessage;
 
-        return JenaOwlConverter.compareRDFNode(r1.value, r2.value);
+        return JenaOwlConverter.compareRDFNode(r1.getValue(), r2.getValue());
     }
 
     private static int compareSeverity(RDFNode n1, RDFNode n2) {
@@ -46,6 +48,21 @@ public class ShaclValidationResultComparator implements Comparator<ShaclValidati
         }
         else {
             return Integer.compare(s1, s2);
+        }
+    }
+
+    private static int compareString(String n1, String n2) {
+        if (Objects.equals(n1, n2)) {
+            return 0;
+        }
+        else if (n1 == null) {
+            return -1;
+        }
+        else if (n2 == null) {
+            return 1;
+        }
+        else {
+            return n1.compareTo(n2);
         }
     }
 

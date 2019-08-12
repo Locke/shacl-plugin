@@ -17,6 +17,7 @@ public class ShaclValidation extends Observable {
 
     public void runValidation2(Model shaclModel, Model dataModel) {
         // Run the validator
+        // NOTE: ValidationUtil should offer an interface to ValidationEngine.getValidationResults
         Resource results = ValidationUtil.validateModel(dataModel, shaclModel, true);
 
         // Print violations

@@ -90,14 +90,16 @@ public class JenaOwlConverter {
     /**
      * Get a qualified name for an URI, if it exists, otherwise just return the original string.
      *
-     * @param model Model containing the prefixes
      * @param node Statement to be checked for a qname
      * @return qname if one exists, otherwise the original string of the object
      */
-    public static String getQName(Model model, RDFNode node) {
+    public static String getQName(RDFNode node) {
         if (node != null) {
             String string = node.toString();
-            String qName = model.qnameFor(string);
+            String qName = null;
+            if (node.getModel() != null) {
+                qName = node.getModel().qnameFor(string);
+            }
             return qName == null ? string : qName;
         } else {
             return "";
