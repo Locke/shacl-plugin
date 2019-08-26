@@ -5,10 +5,10 @@ import java.util.Observable;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 
+import org.topbraid.shacl.validation.ResourceValidationReport;
+import org.topbraid.shacl.validation.ValidationReport;
 import org.topbraid.shacl.validation.ValidationUtil;
 import org.topbraid.shacl.util.ModelPrinter;
-
-import at.ac.tuwien.shacl.plugin.util.ShaclValidationReport;
 
 /**
  *
@@ -25,7 +25,7 @@ public class ShaclValidation extends Observable {
         System.out.println(ModelPrinter.get().print(results.getModel()));
 
 
-        ShaclValidationReport report = new ShaclValidationReport(results);
+        ValidationReport report = new ResourceValidationReport(results);
 
         this.setChanged();
         this.notifyObservers(report);

@@ -20,12 +20,12 @@ import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.topbraid.shacl.validation.ValidationReport;
 import org.topbraid.shacl.validation.ValidationResult;
 
 import at.ac.tuwien.shacl.plugin.events.ErrorNotifier;
 import at.ac.tuwien.shacl.plugin.events.ShaclValidationRegistry;
 import at.ac.tuwien.shacl.plugin.syntax.JenaOwlConverter;
-import at.ac.tuwien.shacl.plugin.util.ShaclValidationReport;
 import at.ac.tuwien.shacl.plugin.util.ShaclValidationResultComparator;
 
 /**
@@ -40,7 +40,7 @@ public class ShaclConstraintViolationPanel extends JPanel {
     private final OWLWorkspace owlWorkspace;
     private final View view;
 
-    private ShaclValidationReport lastReport = null;
+    private ValidationReport lastReport = null;
     private OWLEntity lastSelection = null;
 
     /**
@@ -62,8 +62,13 @@ public class ShaclConstraintViolationPanel extends JPanel {
          */
         @Override
         public void update(Observable o, Object arg) {
-            lastReport = (ShaclValidationReport) arg;
-            updateTable();
+            if (arg instanceof ValidationReport) {
+                lastReport = (ValidationReport) arg;
+                updateTable();
+            }
+            else {
+                // TODO: log internal error
+            }
         }
     };
 
@@ -101,7 +106,7 @@ public class ShaclConstraintViolationPanel extends JPanel {
         // clear table
         ((DefaultTableModel) table.getModel()).setRowCount(0);
 
-        if (lastReport == null || lastReport.validationResults.isEmpty()) {
+        if (lastReport == null || lastReport.results().isEmpty()) {
             updateHeaderText(0, 0);
             return;
         }
@@ -117,7 +122,7 @@ public class ShaclConstraintViolationPanel extends JPanel {
             ((DefaultTableModel) table.getModel()).addRow(row);
         }
 
-        int numAllResults = lastReport.validationResults.size();
+        int numAllResults = lastReport.results().size();
         int numDisplayedResults = validationResults.size();
 
         updateHeaderText(numAllResults, numDisplayedResults);
@@ -132,7 +137,7 @@ public class ShaclConstraintViolationPanel extends JPanel {
         if (lastReport == null) {
             text = "unknown";
         }
-        else if (lastReport.validationResults.isEmpty()) {
+        else if (lastReport.results().isEmpty()) {
             text = "none";
         }
         else {
@@ -145,12 +150,12 @@ public class ShaclConstraintViolationPanel extends JPanel {
         view.setHeaderText(text);
     }
 
-    private List<ValidationResult> filterResults(ShaclValidationReport report, OWLEntity selection) {
+    private List<ValidationResult> filterResults(ValidationReport report, OWLEntity selection) {
         if (selection == null) {
-            return new ArrayList<>(report.validationResults);
+            return report.results();
         }
         else {
-            Stream<ValidationResult> results = report.validationResults.stream();
+            Stream<ValidationResult> results = report.results().stream();
 
             if (selection.isOWLNamedIndividual()) {
                 OWLNamedIndividual selectedIndividual = selection.asOWLNamedIndividual();

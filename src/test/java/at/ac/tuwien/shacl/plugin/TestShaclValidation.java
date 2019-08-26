@@ -9,12 +9,13 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 
 import org.topbraid.jenax.util.JenaUtil;
+import org.topbraid.shacl.validation.ResourceValidationReport;
+import org.topbraid.shacl.validation.ValidationReport;
 import org.topbraid.shacl.validation.ValidationResult;
 import org.topbraid.shacl.validation.ValidationUtil;
 
 import org.junit.Test;
 
-import at.ac.tuwien.shacl.plugin.util.ShaclValidationReport;
 import at.ac.tuwien.shacl.plugin.util.TestUtil;
 
 import static org.junit.Assert.*;
@@ -58,17 +59,21 @@ public class TestShaclValidation {
 
         results.getModel().write(System.out, "TURTLE");
 
-        ShaclValidationReport report = new ShaclValidationReport(results);
+        ValidationReport report = new ResourceValidationReport(results);
 
-        assertFalse("Model should not conform", report.conforms);
-        assertEquals("There should be three violations", 3, report.validationResults.size());
+        assertFalse("Model should not conform", report.conforms());
+        assertEquals("There should be three violations", 3, report.results().size());
 
         Set<String> violationMessages = new HashSet<>(3);
-        for (ValidationResult res : report.validationResults) {
+        for (ValidationResult res : report.results()) {
             violationMessages.add(res.getMessage());
         }
 
-        Set<String> expectedMessages = new HashSet<>(Arrays.asList("More than 1 values", "Predicate ex:birthDate is not allowed (closed shape)", "Value does not match pattern \"^\\d{3}-\\d{2}-\\d{4}$\""));
+        Set<String> expectedMessages = new HashSet<>(Arrays.asList(
+                "Property may only have 1 value, but found 2",
+                "Predicate ex:birthDate is not allowed (closed shape)",
+                "Value does not match pattern \"^\\d{3}-\\d{2}-\\d{4}$\""
+        ));
 
         assertEquals("Expected violation report Messages", expectedMessages, violationMessages);
     }

@@ -40,7 +40,7 @@ public class TestConstraintViolationPanel {
         // Bob is not allowed to have two values for ssn
         assertEquals("sh:Violation", panel.getTableModel().getValueAt(0, 0));
         assertNotNull(panel.getTableModel().getValueAt(0, 2));
-        assertThat(panel.getTableModel().getValueAt(0, 2).toString(), containsString("More than"));
+        assertThat(panel.getTableModel().getValueAt(0, 2).toString(), containsString("Property may only have 1 value, but found 2"));
         assertEquals("ex:Bob", panel.getTableModel().getValueAt(0, 3));
         assertEquals("ex:ssn", panel.getTableModel().getValueAt(0, 4));
 
